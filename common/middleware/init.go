@@ -1,10 +1,11 @@
 package middleware
 
 import (
+	"go-admin/common/actions"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-admin-team/go-admin-core/sdk"
 	jwt "github.com/go-admin-team/go-admin-core/sdk/pkg/jwtauth"
-	"go-admin/common/actions"
 )
 
 const (
@@ -14,7 +15,7 @@ const (
 )
 
 func InitMiddleware(r *gin.Engine) {
-	r.Use(DemoEvn())
+	// r.Use(DemoEvn())
 	// 数据库链接
 	r.Use(WithContextDb)
 	// 日志处理

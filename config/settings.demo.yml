@@ -9,10 +9,10 @@ settings:
     readtimeout: 10000
     writertimeout: 20000
   database:
-    driver: sqlite3
-    source: ./go-admin-db.db
+    driver: mysql
+    source: root:@tcp(127.0.0.1:3306)/test?charset=utf8&parseTime=True&loc=Local&timeout=1000ms
   gen:
-    dbname: testhhh
+    dbname: test
     frontpath: ../go-admin-ui/src
   jwt:
     secret: go-admin

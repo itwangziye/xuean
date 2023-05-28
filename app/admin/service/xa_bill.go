@@ -17,7 +17,7 @@ type XaBill struct {
 }
 
 // GetPage 获取XaBill列表
-func (e *XaBill) GetPage(c *dto.XaBillGetPageReq, p *actions.DataPermission, list *[]models.XaBill, count *int64) error {
+func (e *XaBill) GetPage(c *dto.XaBillGetPageReq, p *actions.DataPermission, list *[]models.XaBill, count *int64, money *dto.TotalMoneyBill) error {
 	var err error
 	var data models.XaBill
 
@@ -49,6 +49,12 @@ func (e *XaBill) GetPage(c *dto.XaBillGetPageReq, p *actions.DataPermission, lis
 
 		*list = append(*list, value)
 	}
+
+	e.Orm.Table("xa_bill").Scopes(
+		cDto.MakeCondition(c.GetNeedSearch()),
+		actions.Permission(data.TableName(), p),
+	).Pluck("sum(income) as income, sum(pay_out) as pay_out, sum(income-pay_out) as profit", &money)
+
 	if err != nil {
 		e.Log.Errorf("XaBillService GetPage error:%s \r\n", err)
 		return err

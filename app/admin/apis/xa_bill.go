@@ -45,14 +45,32 @@ func (e XaBill) GetPage(c *gin.Context) {
 	p := actions.GetPermissionFromContext(c)
 	list := make([]models.XaBill, 0)
 	var count int64
+	var totalMoneyBill = dto.TotalMoneyBill{}
 
-	err = s.GetPage(&req, p, &list, &count)
+	err = s.GetPage(&req, p, &list, &count, &totalMoneyBill)
 	if err != nil {
 		e.Error(500, err, fmt.Sprintf("获取流水表失败，\r\n失败信息 %s", err.Error()))
 		return
 	}
 
-	e.PageOK(list, int(count), req.GetPageIndex(), req.GetPageSize(), "查询成功")
+	type Res struct {
+		List       interface{} `json:"list"`
+		Count      int64       `json:"count"`
+		PageIndex  int         `json:"pageIndex"`
+		PageSize   int         `json:"pageSize"`
+		TotalMoney interface{} `json:"totalMoney"`
+	}
+
+	var res Res
+	res.List = list
+	res.Count = count
+	res.PageIndex = req.GetPageIndex()
+	res.PageSize = req.GetPageSize()
+	res.TotalMoney = totalMoneyBill
+
+	e.OK(res, "查询成功")
+
+	//e.PageOK(list, int(count), req.GetPageIndex(), req.GetPageSize(), "查询成功")
 }
 
 // Get 获取流水表

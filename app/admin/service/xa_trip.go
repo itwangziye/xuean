@@ -33,9 +33,11 @@ func (e *XaTrip) GetPage(c *dto.XaTripGetPageReq, p *actions.DataPermission, lis
 		return err
 	}
 
-	money.Money1 = "11"
-	money.Money2 = "11"
-	money.Money3 = "11"
+	e.Orm.Table("xa_trip").Scopes(
+		cDto.MakeCondition(c.GetNeedSearch()),
+		actions.Permission(data.TableName(), p),
+	).Pluck("sum(pre_money) as money1, sum(pay_money) as money2, sum(if (is_settle=1, pay_money, 0)) as money3", &money)
+
 	return nil
 }
 

@@ -54,7 +54,21 @@ func (e XaTrip) GetPage(c *gin.Context) {
 		return
 	}
 
-	e.PageOK(list, int(count), req.GetPageIndex(), req.GetPageSize(), "查询成功")
+	type Res struct {
+		List       interface{} `json:"list"`
+		Count      int64       `json:"count"`
+		PageIndex  int         `json:"pageIndex"`
+		PageSize   int         `json:"pageSize"`
+		TotalMoney interface{} `json:"totalMoney"`
+	}
+
+	var res Res
+	res.List = list
+	res.Count = count
+	res.PageIndex = req.GetPageIndex()
+	res.PageSize = req.GetPageSize()
+	res.TotalMoney = TotalMoney
+	e.OK(res, "查询成功")
 }
 
 // Get 获取行程表

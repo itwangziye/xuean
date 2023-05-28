@@ -25,6 +25,12 @@ func (m *XaBillGetPageReq) GetNeedSearch() interface{} {
 	return *m
 }
 
+type TotalMoneyBill struct {
+	Income float64 `json:"Income" comment:"总收入"`
+	PayOut float64 `json:"PayOut" comment:"总支出"`
+	Profit float64 `json:"Profit" comment:"净利润"`
+}
+
 type XaBillInsertReq struct {
 	Id           int    `json:"-" comment:""` //
 	BillType     string `json:"billType" comment:"流水类型，1车费结算，2返差"`

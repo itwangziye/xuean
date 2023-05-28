@@ -24,9 +24,9 @@ type XaTripOrder struct {
 }
 
 type TotalMoney struct {
-	Money1 string `json:"money1" comment:"总金额1"`
-	Money2 string `json:"money2" comment:"总金额2"`
-	Money3 string `json:"money3" comment:"总金额3"`
+	Money1 float64 `json:"money1" comment:"总计应用金额"`
+	Money2 float64 `json:"money2" comment:"总计实付金额"`
+	Money3 float64 `json:"money3" comment:"总计未收金额"`
 }
 
 func (m *XaTripGetPageReq) GetNeedSearch() interface{} {

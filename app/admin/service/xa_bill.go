@@ -85,6 +85,21 @@ func (e *XaBill) Get(d *dto.XaBillGetReq, p *actions.DataPermission, model *mode
 
 // Insert 创建XaBill对象
 func (e *XaBill) Insert(c *dto.XaBillInsertReq) error {
+
+	if c.BillType == "1" {
+		// 修改行程信息
+		if len(c.TripId) == 0 {
+			return errors.New("请选择行程信息")
+		}
+
+		var tripList []models.XaTrip
+		e.Orm.Table("xa_trip").Where("trip_id in ?", c.TripId).Where("is_settle != ?", "2").Find(&tripList)
+		if len(tripList) == 0 {
+			return errors.New("选择的行程信息不存在或已结算")
+		}
+
+	}
+
 	var err error
 	var data models.XaBill
 	c.Generate(&data)
@@ -92,6 +107,17 @@ func (e *XaBill) Insert(c *dto.XaBillInsertReq) error {
 	if err != nil {
 		e.Log.Errorf("XaBillService Insert error:%s \r\n", err)
 		return err
+	}
+
+	if c.BillType == "1" {
+		err = e.Orm.Table("xa_trip").Where("trip_id in ?", c.TripId).
+			Update("bill_id", data.BillId).
+			Update("is_settle", "2").Error
+
+		if err != nil {
+			e.Log.Errorf("XaInvoiceService Insert error:%s \r\n", err)
+			return err
+		}
 	}
 	return nil
 }

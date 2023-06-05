@@ -19,6 +19,8 @@ type XaBillOrder struct {
 	PayType      string `form:"payType"  search:"type:exact;column:pay_type;table:xa_bill"`
 	BillStatus   string `form:"billStatus"  search:"type:exact;column:bill_status;table:xa_bill"`
 	OperatorName string `form:"operatorName"  search:"type:exact;column:operator_name;table:xa_bill"`
+	BeginTime    string `form:"beginTime" search:"type:gte;column:counted;table:xa_bill" comment:"创建时间"`
+	EndTime      string `form:"endTime" search:"type:lte;column:counted;table:xa_bill" comment:"创建时间"`
 }
 
 func (m *XaBillGetPageReq) GetNeedSearch() interface{} {
@@ -32,14 +34,15 @@ type TotalMoneyBill struct {
 }
 
 type XaBillInsertReq struct {
-	Id           int    `json:"-" comment:""` //
-	BillType     string `json:"billType" comment:"流水类型，1车费结算，2返差"`
-	BillObj      string `json:"billObj" comment:"交易对象"`
-	PayType      string `json:"payType" comment:"交易类型"`
-	Income       string `json:"income" comment:"收入"`
-	PayOut       string `json:"payOut" comment:"支出"`
-	Remark       string `json:"remark" comment:"备注"`
-	OperatorName string `json:"operatorName" comment:"经办人"`
+	Id           int      `json:"-" comment:""` //
+	BillType     string   `json:"billType" comment:"流水类型，1车费结算，2返差"`
+	BillObj      string   `json:"billObj" comment:"交易对象"`
+	PayType      string   `json:"payType" comment:"交易类型"`
+	Income       string   `json:"income" comment:"收入"`
+	PayOut       string   `json:"payOut" comment:"支出"`
+	Remark       string   `json:"remark" comment:"备注"`
+	OperatorName string   `json:"operatorName" comment:"经办人"`
+	TripId       []string `json:"trip_id" comment:"行程编号" vd:"len($)>0"`
 	common.ControlBy
 }
 

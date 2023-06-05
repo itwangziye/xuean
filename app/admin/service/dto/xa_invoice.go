@@ -17,7 +17,8 @@ type XaInvoiceOrder struct {
 	TripId         string `form:"tripId"  search:"-"`
 	InvoiceCompany string `form:"invoiceCompany"  search:"type:exact;column:invoice_company;table:xa_invoice"`
 	Remark         string `form:"remark"  search:"type:contains;column:remark;table:xa_invoice"`
-	Counted        string `form:"counted"  search:"type:exact;column:counted;table:xa_invoice"`
+	BeginTime      string `form:"beginTime" search:"type:gte;column:counted;table:xa_invoice" comment:"创建时间"`
+	EndTime        string `form:"endTime" search:"type:lte;column:counted;table:xa_invoice" comment:"创建时间"`
 }
 
 func (m *XaInvoiceGetPageReq) GetNeedSearch() interface{} {

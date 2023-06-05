@@ -20,8 +20,8 @@ type XaTripOrder struct {
 	OperatorName string `form:"operatorName"  search:"type:contains;column:operator_name;table:xa_trip"`
 	IsSettle     string `form:"isSettle"  search:"type:exact;column:is_settle;table:xa_trip"`
 	IsInvoicing  string `form:"isInvoicing"  search:"type:exact;column:is_Invoicing;table:xa_trip"`
-	BeginTime    string `form:"beginTime"  search:"-"`
-	EndTime      string `form:"endTime"  search:"-"`
+	BeginTime    string `form:"beginTime" search:"type:gte;column:counted;table:xa_trip" comment:"创建时间"`
+	EndTime      string `form:"endTime" search:"type:lte;column:counted;table:xa_trip" comment:"创建时间"`
 }
 
 type TotalMoney struct {

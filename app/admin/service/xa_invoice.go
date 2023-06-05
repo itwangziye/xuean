@@ -88,7 +88,7 @@ func (e *XaInvoice) Insert(c *dto.XaInvoiceInsertReq) error {
 	}
 
 	var tripList []models.XaTrip
-	e.Orm.Table("xa_trip").Where("trip_id in ?", c.TripId).Where("is_invoicing != ?", "1").Find(&tripList)
+	e.Orm.Table("xa_trip").Where("trip_id in ?", c.TripId).Where("is_invoicing != ?", "2").Find(&tripList)
 	if len(tripList) == 0 {
 		return errors.New("选择的行程信息不存在或已出票")
 	}

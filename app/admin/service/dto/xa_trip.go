@@ -20,7 +20,8 @@ type XaTripOrder struct {
 	OperatorName string `form:"operatorName"  search:"type:contains;column:operator_name;table:xa_trip"`
 	IsSettle     string `form:"isSettle"  search:"type:exact;column:is_settle;table:xa_trip"`
 	IsInvoicing  string `form:"isInvoicing"  search:"type:exact;column:is_Invoicing;table:xa_trip"`
-	Counted      string `form:"counted"  search:"type:exact;column:counted;table:xa_trip"`
+	BeginTime    string `form:"beginTime"  search:"-"`
+	EndTime      string `form:"endTime"  search:"-"`
 }
 
 type TotalMoney struct {
@@ -70,11 +71,11 @@ func (s *XaTripInsertReq) Generate(model *models.XaTrip) {
 	model.IsSettle = s.IsSettle
 	model.PayMoney = "0"
 
-	if s.IsSettle == "1" {
+	if s.IsSettle == "2" {
 		model.PayMoney = s.PayMoney
 	}
 
-	if s.IsInvoicing == "1" {
+	if s.IsInvoicing == "2" {
 		model.InvoiceId = s.InvoiceId
 	}
 

@@ -112,7 +112,7 @@ func (e *XaInvoice) Insert(c *dto.XaInvoiceInsertReq) error {
 
 	err = e.Orm.Table("xa_trip").Where("trip_id in ?", c.TripId).
 		Update("invoice_id", c.InvoiceId).
-		Update("is_invoicing", "1").Error
+		Update("is_invoicing", "2").Error
 
 	if err != nil {
 		e.Log.Errorf("XaInvoiceService Insert error:%s \r\n", err)

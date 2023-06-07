@@ -42,7 +42,7 @@ type XaBillInsertReq struct {
 	PayOut       string   `json:"payOut" comment:"支出"`
 	Remark       string   `json:"remark" comment:"备注"`
 	OperatorName string   `json:"operatorName" comment:"经办人"`
-	TripId       []string `json:"trip_id" comment:"行程编号" vd:"len($)>0"`
+	TripId       []string `json:"trip_id" comment:"行程编号"`
 	common.ControlBy
 }
 

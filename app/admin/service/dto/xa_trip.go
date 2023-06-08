@@ -9,19 +9,20 @@ import (
 
 type XaTripGetPageReq struct {
 	dto.Pagination `search:"-"`
+	TripId         string `form:"tripId"  search:"type:exact;column:trip_id;table:xa_trip"`
+	CarLink        string `form:"carLink"  search:"type:contains;column:car_link;table:xa_trip"`
+	CarId          string `form:"carId"  search:"type:contains;column:car_id;table:xa_trip"`
+	driverName     string `form:"driverName"  search:"type:exact;column:driver_name;table:xa_trip"`
+	OperatorName   string `form:"operatorName"  search:"type:contains;column:operator_name;table:xa_trip"`
+	IsSettle       string `form:"isSettle"  search:"type:exact;column:is_settle;table:xa_trip"`
+	IsInvoicing    string `form:"isInvoicing"  search:"type:exact;column:is_Invoicing;table:xa_trip"`
+	BeginTime      string `form:"beginTime" search:"type:gte;column:counted;table:xa_trip" comment:"创建时间"`
+	EndTime        string `form:"endTime" search:"type:lte;column:counted;table:xa_trip" comment:"创建时间"`
 	XaTripOrder
 }
 
 type XaTripOrder struct {
-	TripId       string `form:"tripId"  search:"type:exact;column:trip_id;table:xa_trip"`
-	CarLink      string `form:"carLink"  search:"type:contains;column:car_link;table:xa_trip"`
-	CarId        string `form:"carId"  search:"type:contains;column:car_id;table:xa_trip"`
-	driverName   string `form:"driverName"  search:"type:exact;column:driver_name;table:xa_trip"`
-	OperatorName string `form:"operatorName"  search:"type:contains;column:operator_name;table:xa_trip"`
-	IsSettle     string `form:"isSettle"  search:"type:exact;column:is_settle;table:xa_trip"`
-	IsInvoicing  string `form:"isInvoicing"  search:"type:exact;column:is_Invoicing;table:xa_trip"`
-	BeginTime    string `form:"beginTime" search:"type:gte;column:counted;table:xa_trip" comment:"创建时间"`
-	EndTime      string `form:"endTime" search:"type:lte;column:counted;table:xa_trip" comment:"创建时间"`
+	CreatedAtOrder string `search:"type:order;column:created_at;table:xa_trip" form:"createdAtOrder"`
 }
 
 type TotalMoney struct {

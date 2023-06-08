@@ -9,18 +9,19 @@ import (
 
 type XaBillGetPageReq struct {
 	dto.Pagination `search:"-"`
+	BillId         string `form:"billId"  search:"type:exact;column:bill_id;table:xa_bill"`
+	BillType       string `form:"billType"  search:"type:exact;column:bill_type;table:xa_bill"`
+	BillObj        string `form:"billObj"  search:"type:contains;column:bill_obj;table:xa_bill"`
+	PayType        string `form:"payType"  search:"type:exact;column:pay_type;table:xa_bill"`
+	BillStatus     string `form:"billStatus"  search:"type:exact;column:bill_status;table:xa_bill"`
+	OperatorName   string `form:"operatorName"  search:"type:exact;column:operator_name;table:xa_bill"`
+	BeginTime      string `form:"beginTime" search:"type:gte;column:counted;table:xa_bill" comment:"创建时间"`
+	EndTime        string `form:"endTime" search:"type:lte;column:counted;table:xa_bill" comment:"创建时间"`
 	XaBillOrder
 }
 
 type XaBillOrder struct {
-	BillId       string `form:"billId"  search:"type:exact;column:bill_id;table:xa_bill"`
-	BillType     string `form:"billType"  search:"type:exact;column:bill_type;table:xa_bill"`
-	BillObj      string `form:"billObj"  search:"type:contains;column:bill_obj;table:xa_bill"`
-	PayType      string `form:"payType"  search:"type:exact;column:pay_type;table:xa_bill"`
-	BillStatus   string `form:"billStatus"  search:"type:exact;column:bill_status;table:xa_bill"`
-	OperatorName string `form:"operatorName"  search:"type:exact;column:operator_name;table:xa_bill"`
-	BeginTime    string `form:"beginTime" search:"type:gte;column:counted;table:xa_bill" comment:"创建时间"`
-	EndTime      string `form:"endTime" search:"type:lte;column:counted;table:xa_bill" comment:"创建时间"`
+	CreatedAtOrder string `search:"type:order;column:created_at;table:xa_bill" form:"createdAtOrder"`
 }
 
 func (m *XaBillGetPageReq) GetNeedSearch() interface{} {

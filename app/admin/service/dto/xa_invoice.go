@@ -9,16 +9,17 @@ import (
 
 type XaInvoiceGetPageReq struct {
 	dto.Pagination `search:"-"`
-	XaInvoiceOrder
-}
-
-type XaInvoiceOrder struct {
 	InvoiceId      string `form:"invoiceId"  search:"type:exact;column:invoice_id;table:xa_invoice"`
 	TripId         string `form:"tripId"  search:"-"`
 	InvoiceCompany string `form:"invoiceCompany"  search:"type:exact;column:invoice_company;table:xa_invoice"`
 	Remark         string `form:"remark"  search:"type:contains;column:remark;table:xa_invoice"`
 	BeginTime      string `form:"beginTime" search:"type:gte;column:counted;table:xa_invoice" comment:"创建时间"`
 	EndTime        string `form:"endTime" search:"type:lte;column:counted;table:xa_invoice" comment:"创建时间"`
+	XaInvoiceOrder
+}
+
+type XaInvoiceOrder struct {
+	CreatedAtOrder string `search:"type:order;column:created_at;table:xa_invoice" form:"createdAtOrder"`
 }
 
 func (m *XaInvoiceGetPageReq) GetNeedSearch() interface{} {
@@ -32,7 +33,7 @@ type XaInvoiceInsertReq struct {
 	Money          string   `json:"money" comment:"发票金额" vd:"len($)>0"`
 	Remark         string   `json:"remark" comment:"发票备注"`
 	InvoiceStatus  string   `json:"invoiceStatus" comment:"状态"`
-	TripId         []string `json:"trip_id" comment:"行程编号" vd:"len($)>0"`
+	TripId         []string `json:"trip_id" comment:"行程编号"`
 	common.ControlBy
 }
 
@@ -74,6 +75,7 @@ func (s *XaInvoiceUpdateReq) Generate(model *models.XaInvoice) {
 	model.Remark = s.Remark
 	model.InvoiceStatus = "1"
 	model.UpdateBy = s.UpdateBy // 添加这而，需要记录是被谁更新的
+	model.Counted = time.Now().Format("2006-01-02")
 }
 
 func (s *XaInvoiceUpdateReq) GetId() interface{} {

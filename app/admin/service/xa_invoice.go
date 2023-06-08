@@ -83,14 +83,12 @@ func (e *XaInvoice) Get(d *dto.XaInvoiceGetReq, p *actions.DataPermission, model
 // Insert 创建XaInvoice对象
 func (e *XaInvoice) Insert(c *dto.XaInvoiceInsertReq) error {
 	// 修改行程信息
-	if len(c.TripId) == 0 {
-		return errors.New("请选择行程信息")
-	}
-
-	var tripList []models.XaTrip
-	e.Orm.Table("xa_trip").Where("trip_id in ?", c.TripId).Where("is_invoicing != ?", "2").Find(&tripList)
-	if len(tripList) == 0 {
-		return errors.New("选择的行程信息不存在或已出票")
+	if len(c.TripId) > 0 {
+		var tripList []models.XaTrip
+		e.Orm.Table("xa_trip").Where("trip_id in ?", c.TripId).Where("is_invoicing != ?", "2").Find(&tripList)
+		if len(tripList) == 0 {
+			return errors.New("选择的行程信息不存在或已出票")
+		}
 	}
 
 	var checkXaInvoice models.XaInvoice
@@ -110,13 +108,15 @@ func (e *XaInvoice) Insert(c *dto.XaInvoiceInsertReq) error {
 		return err
 	}
 
-	err = e.Orm.Table("xa_trip").Where("trip_id in ?", c.TripId).
-		Update("invoice_id", c.InvoiceId).
-		Update("is_invoicing", "2").Error
+	if len(c.TripId) > 0 {
+		err = e.Orm.Table("xa_trip").Where("trip_id in ?", c.TripId).
+			Update("invoice_id", c.InvoiceId).
+			Update("is_invoicing", "2").Error
 
-	if err != nil {
-		e.Log.Errorf("XaInvoiceService Insert error:%s \r\n", err)
-		return err
+		if err != nil {
+			e.Log.Errorf("XaInvoiceService Insert error:%s \r\n", err)
+			return err
+		}
 	}
 
 	return nil

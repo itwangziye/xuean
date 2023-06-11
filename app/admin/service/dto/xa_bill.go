@@ -112,6 +112,16 @@ func (s *XaBillUpdateReq) Generate(model *models.XaBill) {
 	model.Counted = time.Now().Format("2006-01-02")
 }
 
+type XaBillUpdateStatusReq struct {
+	Id         int    `uri:"id" comment:""` //
+	BillStatus string `json:"BillStatus" comment:"状态"`
+	common.ControlBy
+}
+
+func (s *XaBillUpdateStatusReq) GetStatusId() interface{} {
+	return s.Id
+}
+
 func (s *XaBillUpdateReq) GetId() interface{} {
 	return s.Id
 }
@@ -132,4 +142,10 @@ type XaBillDeleteReq struct {
 
 func (s *XaBillDeleteReq) GetId() interface{} {
 	return s.Ids
+}
+
+func (s *XaBillUpdateStatusReq) GenerateStatus(model *models.XaBill) {
+	model.Id = s.Id
+	model.BillStatus = s.BillStatus
+	model.UpdateBy = s.UpdateBy // 添加这而，需要记录是被谁更新的
 }

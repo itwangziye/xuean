@@ -163,3 +163,40 @@ func (e *XaBill) Remove(d *dto.XaBillDeleteReq, p *actions.DataPermission) error
 	}
 	return nil
 }
+
+// UpdateStatus 修改XaBill对象
+func (e *XaBill) UpdateStatus(c *dto.XaBillUpdateStatusReq, p *actions.DataPermission) error {
+	if c.BillStatus != "2" && c.BillStatus != "3" {
+		return errors.New("操作失败，参数错误")
+	}
+	var err error
+	var data = models.XaBill{}
+	var model models.XaBill
+
+	e.Orm.Scopes(
+		actions.Permission(data.TableName(), p),
+	).First(&data, c.GetStatusId())
+	c.GenerateStatus(&model)
+
+	if data.Id == 0 {
+		return errors.New("操作失败，流水信息不存在或已被删除")
+	}
+
+	msg := "确认"
+	if c.BillStatus == "3" {
+		msg = "审核失败"
+	}
+
+	if data.BillStatus == c.BillStatus {
+		return errors.New("操作失败，流水已" + msg)
+	}
+
+	update := e.Orm.Model(&model).Where("id = ?", &model.Id).Updates(&model)
+
+	if update.Error != nil {
+		e.Log.Errorf("XaBillService Save error:%s \r\n", err)
+		return err
+
+	}
+	return nil
+}

@@ -208,3 +208,26 @@ func (e XaBill) Delete(c *gin.Context) {
 	}
 	e.OK(req.GetId(), "删除成功")
 }
+func (e XaBill) Review(c *gin.Context) {
+	req := dto.XaBillUpdateStatusReq{}
+	s := service.XaBill{}
+	err := e.MakeContext(c).
+		MakeOrm().
+		Bind(&req).
+		MakeService(&s.Service).
+		Errors
+	if err != nil {
+		e.Logger.Error(err)
+		e.Error(500, err, err.Error())
+		return
+	}
+	req.SetUpdateBy(user.GetUserId(c))
+	p := actions.GetPermissionFromContext(c)
+
+	err = s.UpdateStatus(&req, p)
+	if err != nil {
+		e.Error(500, err, fmt.Sprintf("确认流水失败，\r\n失败信息 %s", err.Error()))
+		return
+	}
+	e.OK(req.GetStatusId(), "操作成功")
+}

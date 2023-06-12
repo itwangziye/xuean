@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-
 	"github.com/go-admin-team/go-admin-core/sdk/service"
 	"gorm.io/gorm"
 
@@ -44,6 +43,11 @@ func (e *XaBill) GetPage(c *dto.XaBillGetPageReq, p *actions.DataPermission, lis
 			for _, v := range tripList {
 				tripIds = v.TripId + ","
 			}
+		}
+
+		if tripIds != "" {
+			length := len(tripIds) - 1
+			tripIds = tripIds[0:length]
 		}
 		value.TripId = tripIds
 

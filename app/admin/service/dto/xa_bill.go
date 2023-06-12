@@ -15,6 +15,7 @@ type XaBillGetPageReq struct {
 	PayType        string `form:"payType"  search:"type:exact;column:pay_type;table:xa_bill"`
 	BillStatus     string `form:"billStatus"  search:"type:exact;column:bill_status;table:xa_bill"`
 	OperatorName   string `form:"operatorName"  search:"type:contains;column:operator_name;table:xa_bill"`
+	Remark         string `form:"remark"  search:"type:contains;column:remark;table:xa_bill"`
 	BeginTime      string `form:"beginTime" search:"type:gte;column:counted;table:xa_bill" comment:"创建时间"`
 	EndTime        string `form:"endTime" search:"type:lte;column:counted;table:xa_bill" comment:"创建时间"`
 	XaBillOrder

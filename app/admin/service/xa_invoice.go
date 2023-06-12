@@ -34,7 +34,7 @@ func (e *XaInvoice) GetPage(c *dto.XaInvoiceGetPageReq, p *actions.DataPermissio
 			cDto.Paginate(c.GetPageSize(), c.GetPageIndex()),
 			actions.Permission(data.TableName(), p),
 		).
-		Find(&listTemp).Count(count).Error
+		Find(&listTemp).Limit(-1).Offset(-1).Count(count).Error
 	for _, value := range listTemp {
 		invoiceId := value.InvoiceId
 
@@ -47,6 +47,11 @@ func (e *XaInvoice) GetPage(c *dto.XaInvoiceGetPageReq, p *actions.DataPermissio
 			for _, v := range tripList {
 				tripIds = v.TripId + ","
 			}
+		}
+
+		if tripIds != "" {
+			length := len(tripIds) - 1
+			tripIds = tripIds[0:length]
 		}
 		value.TripId = tripIds
 

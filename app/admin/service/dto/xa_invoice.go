@@ -11,7 +11,7 @@ type XaInvoiceGetPageReq struct {
 	dto.Pagination `search:"-"`
 	InvoiceId      string `form:"invoiceId"  search:"type:exact;column:invoice_id;table:xa_invoice"`
 	TripId         string `form:"tripId"  search:"-"`
-	InvoiceCompany string `form:"invoiceCompany"  search:"type:exact;column:invoice_company;table:xa_invoice"`
+	InvoiceCompany string `form:"invoiceCompany"  search:"type:contains;column:invoice_company;table:xa_invoice"`
 	Remark         string `form:"remark"  search:"type:contains;column:remark;table:xa_invoice"`
 	BeginTime      string `form:"beginTime" search:"type:gte;column:counted;table:xa_invoice" comment:"创建时间"`
 	EndTime        string `form:"endTime" search:"type:lte;column:counted;table:xa_invoice" comment:"创建时间"`

@@ -10,6 +10,7 @@ import (
 type XaBillGetPageReq struct {
 	dto.Pagination `search:"-"`
 	BillId         string `form:"billId"  search:"type:exact;column:bill_id;table:xa_bill"`
+	TripId         string `form:"tripId"  search:"-"`
 	BillType       string `form:"billType"  search:"type:exact;column:bill_type;table:xa_bill"`
 	BillObj        string `form:"billObj"  search:"type:contains;column:bill_obj;table:xa_bill"`
 	PayType        string `form:"payType"  search:"type:exact;column:pay_type;table:xa_bill"`

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/go-admin-team/go-admin-core/sdk/service"
 	"gorm.io/gorm"
+	"strconv"
 
 	"go-admin/app/admin/models"
 	"go-admin/app/admin/service/dto"
@@ -19,6 +20,17 @@ type XaBill struct {
 func (e *XaBill) GetPage(c *dto.XaBillGetPageReq, p *actions.DataPermission, list *[]models.XaBill, count *int64, money *dto.TotalMoneyBill) error {
 	var err error
 	var data models.XaBill
+
+	if c.TripId != "" {
+		var tripInfo models.XaTrip
+
+		e.Orm.Table("xa_trip").Where("trip_id=?", c.TripId).Find(&tripInfo)
+		c.BillId = tripInfo.BillId
+
+		if tripInfo.Id == 0 {
+			c.BillId = "0"
+		}
+	}
 
 	var listTemp = make([]models.XaBill, 0)
 
@@ -90,18 +102,29 @@ func (e *XaBill) Get(d *dto.XaBillGetReq, p *actions.DataPermission, model *mode
 // Insert 创建XaBill对象
 func (e *XaBill) Insert(c *dto.XaBillInsertReq) error {
 
+	var totalMoney float64
+	var tripList []models.XaTrip
 	if c.BillType == "1" {
 		// 修改行程信息
 		if len(c.TripId) == 0 {
 			return errors.New("请选择行程信息")
 		}
 
-		var tripList []models.XaTrip
 		e.Orm.Table("xa_trip").Where("trip_id in ?", c.TripId).Where("is_settle != ?", "2").Find(&tripList)
 		if len(tripList) == 0 {
 			return errors.New("选择的行程信息不存在或已结算")
 		}
+		for _, value := range tripList {
+			if value.TripStatus == "1" {
+				return errors.New("选择的行程【" + value.TripId + "】尚未审核")
+			}
+			if value.TripStatus == "3" {
+				return errors.New("选择的行程【" + value.TripId + "】未审核通过")
+			}
 
+			preMoney, _ := strconv.ParseFloat(value.PreMoney, 64)
+			totalMoney = totalMoney + preMoney
+		}
 	}
 
 	var err error
@@ -114,13 +137,24 @@ func (e *XaBill) Insert(c *dto.XaBillInsertReq) error {
 	}
 
 	if c.BillType == "1" {
-		err = e.Orm.Table("xa_trip").Where("trip_id in ?", c.TripId).
-			Update("bill_id", data.BillId).
-			Update("is_settle", "2").Error
 
-		if err != nil {
-			e.Log.Errorf("XaInvoiceService Insert error:%s \r\n", err)
-			return err
+		income, _ := strconv.ParseFloat(c.Income, 64)
+
+		for _, val := range tripList {
+			var payMoney float64
+			preMoney, _ := strconv.ParseFloat(val.PreMoney, 64)
+
+			payMoney = (preMoney / totalMoney) * income
+
+			err = e.Orm.Table("xa_trip").Where("id = ?", val.Id).
+				Update("bill_id", data.BillId).
+				Update("is_settle", "2").
+				Update("pay_money", payMoney).Error
+
+			if err != nil {
+				e.Log.Errorf("XaInvoiceService Insert error:%s \r\n", err)
+				return err
+			}
 		}
 	}
 	return nil
@@ -147,6 +181,32 @@ func (e *XaBill) Update(c *dto.XaBillUpdateReq, p *actions.DataPermission) error
 	if db.RowsAffected == 0 {
 		return errors.New("无权更新该数据")
 	}
+
+	// 同步更新行程实付金额
+	var tripList []models.XaTrip
+
+	e.Orm.Table("xa_trip").Where("bill_id = ?", data.BillId).Find(&tripList)
+
+	if len(tripList) > 0 {
+		var totalMoney float64
+		for _, value := range tripList {
+			var preMoney float64
+			preMoney, _ = strconv.ParseFloat(value.PreMoney, 64)
+			totalMoney = totalMoney + preMoney
+		}
+
+		for _, val := range tripList {
+			var payMoney float64
+			var preMoney float64
+			preMoney, _ = strconv.ParseFloat(val.PreMoney, 64)
+			income, _ := strconv.ParseFloat(data.Income, 64)
+			payMoney = (preMoney / totalMoney) * income
+
+			_ = e.Orm.Table("xa_trip").Where("id = ?", val.Id).
+				Update("pay_money", payMoney).Error
+		}
+	}
+
 	return nil
 }
 

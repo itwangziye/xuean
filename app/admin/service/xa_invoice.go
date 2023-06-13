@@ -25,6 +25,10 @@ func (e *XaInvoice) GetPage(c *dto.XaInvoiceGetPageReq, p *actions.DataPermissio
 
 		e.Orm.Table("xa_trip").Where("trip_id=?", c.TripId).Find(&tripInfo)
 		c.InvoiceId = tripInfo.InvoiceId
+
+		if tripInfo.Id == 0 {
+			c.InvoiceId = "0"
+		}
 	}
 	var listTemp = make([]models.XaInvoice, 0)
 
@@ -93,6 +97,15 @@ func (e *XaInvoice) Insert(c *dto.XaInvoiceInsertReq) error {
 		e.Orm.Table("xa_trip").Where("trip_id in ?", c.TripId).Where("is_invoicing != ?", "2").Find(&tripList)
 		if len(tripList) == 0 {
 			return errors.New("选择的行程信息不存在或已出票")
+		}
+
+		for _, value := range tripList {
+			if value.TripStatus == "1" {
+				return errors.New("选择的行程【" + value.TripId + "】尚未审核")
+			}
+			if value.TripStatus == "3" {
+				return errors.New("选择的行程【" + value.TripId + "】未审核通过")
+			}
 		}
 	}
 

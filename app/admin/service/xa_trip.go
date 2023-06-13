@@ -36,7 +36,7 @@ func (e *XaTrip) GetPage(c *dto.XaTripGetPageReq, p *actions.DataPermission, lis
 	e.Orm.Table("xa_trip").Scopes(
 		cDto.MakeCondition(c.GetNeedSearch()),
 		actions.Permission(data.TableName(), p),
-	).Pluck("sum(pre_money) as money1, sum(pay_money) as money2, sum(if (is_settle=1, pay_money, 0)) as money3", &money)
+	).Where("deleted_at is null").Pluck("sum(pre_money) as money1, sum(pay_money) as money2, sum(if (is_settle=1, pre_money, 0)) as money3", &money)
 
 	return nil
 }

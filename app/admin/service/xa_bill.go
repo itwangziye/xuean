@@ -69,7 +69,7 @@ func (e *XaBill) GetPage(c *dto.XaBillGetPageReq, p *actions.DataPermission, lis
 	e.Orm.Table("xa_bill").Scopes(
 		cDto.MakeCondition(c.GetNeedSearch()),
 		actions.Permission(data.TableName(), p),
-	).Pluck("sum(income) as income, sum(pay_out) as pay_out, sum(income-pay_out) as profit", &money)
+	).Where("deleted_at is null").Pluck("sum(income) as income, sum(pay_out) as pay_out, sum(income-pay_out) as profit", &money)
 
 	if err != nil {
 		e.Log.Errorf("XaBillService GetPage error:%s \r\n", err)

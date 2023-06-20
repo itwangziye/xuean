@@ -11,6 +11,7 @@ type XaTripGetPageReq struct {
 	dto.Pagination `search:"-"`
 	TripId         string `form:"tripId"  search:"type:exact;column:trip_id;table:xa_trip"`
 	CarLink        string `form:"carLink"  search:"type:contains;column:car_link;table:xa_trip"`
+	CarCustomer    string `form:"carCustomer"  search:"type:contains;column:car_customer;table:xa_trip"`
 	CarId          string `form:"carId"  search:"type:contains;column:car_id;table:xa_trip"`
 	DriverName     string `form:"driverName"  search:"type:contains;column:driver_name;table:xa_trip"`
 	OperatorName   string `form:"operatorName"  search:"type:contains;column:operator_name;table:xa_trip"`
@@ -40,6 +41,7 @@ type XaTripInsertReq struct {
 	//TripId       string `json:"tripId" comment:"行程编号"`
 	TripName     string `json:"tripName" comment:"行程说明" vd:"len($)>0"`
 	CarLink      string `json:"carLink" comment:"用车联系人" vd:"len($)>0"`
+	CarCustomer  string `json:"carCustomer" comment:"用车单位" vd:"len($)>0"`
 	CarId        string `json:"carId" comment:"车牌号" vd:"len($)>0"`
 	DriverName   string `json:"driverName" comment:"司机姓名" vd:"len($)>0"`
 	OperatorName string `json:"operatorName" comment:"经办人" vd:"len($)>0"`
@@ -65,6 +67,7 @@ func (s *XaTripInsertReq) Generate(model *models.XaTrip) {
 	model.TripId = "XCBH" + dto.RandStr(10)
 	model.TripName = s.TripName
 	model.CarLink = s.CarLink
+	model.CarCustomer = s.CarCustomer
 	model.CarId = s.CarId
 	model.DriverName = s.DriverName
 	model.OperatorName = s.OperatorName
@@ -96,6 +99,7 @@ type XaTripUpdateReq struct {
 	Id           int    `uri:"id" comment:""` //
 	TripName     string `json:"tripName" comment:"行程说明" vd:"len($)>0"`
 	CarLink      string `json:"carLink" comment:"用车联系人" vd:"len($)>0"`
+	CarCustomer  string `json:"carCustomer" comment:"用车单位" vd:"len($)>0"`
 	CarId        string `json:"carId" comment:"车牌号" vd:"len($)>0"`
 	DriverName   string `json:"driverName" comment:"司机姓名" vd:"len($)>0"`
 	OperatorName string `json:"operatorName" comment:"经办人" vd:"len($)>0"`
@@ -115,6 +119,7 @@ func (s *XaTripUpdateReq) Generate(model *models.XaTrip) {
 	}
 	model.TripName = s.TripName
 	model.CarLink = s.CarLink
+	model.CarCustomer = s.CarCustomer
 	model.CarId = s.CarId
 	model.DriverName = s.DriverName
 	model.OperatorName = s.OperatorName

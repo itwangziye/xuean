@@ -19,6 +19,7 @@ type XaTrip struct {
 func (e *XaTrip) GetPage(c *dto.XaTripGetPageReq, p *actions.DataPermission, list *[]models.XaTrip, count *int64, money *dto.TotalMoney) error {
 	var err error
 	var data models.XaTrip
+	c.CreatedAtOrder = "desc"
 
 	err = e.Orm.Model(&data).
 		Scopes(

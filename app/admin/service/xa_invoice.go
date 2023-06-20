@@ -19,6 +19,7 @@ type XaInvoice struct {
 func (e *XaInvoice) GetPage(c *dto.XaInvoiceGetPageReq, p *actions.DataPermission, list *[]models.XaInvoice, count *int64) error {
 	var err error
 	var data models.XaInvoice
+	c.CreatedAtOrder = "desc"
 
 	if c.TripId != "" {
 		var tripInfo models.XaTrip

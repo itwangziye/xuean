@@ -10,6 +10,7 @@ type XaTrip struct {
 	TripId       string `json:"tripId" gorm:"type:varchar(50);comment:行程编号"`
 	TripName     string `json:"tripName" gorm:"type:varchar(20);comment:行程说明"`
 	CarLink      string `json:"carLink" gorm:"type:varchar(20);comment:用车联系人"`
+	CarCustomer  string `json:"carCustomer" gorm:"type:varchar(100);comment:用车单位"`
 	CarId        string `json:"carId" gorm:"type:varchar(20);comment:车牌号"`
 	DriverName   string `json:"driverName" gorm:"type:varchar(20);comment:司机姓名"`
 	OperatorName string `json:"operatorName" gorm:"type:varchar(20);comment:经办人"`

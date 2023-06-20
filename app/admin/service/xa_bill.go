@@ -20,6 +20,7 @@ type XaBill struct {
 func (e *XaBill) GetPage(c *dto.XaBillGetPageReq, p *actions.DataPermission, list *[]models.XaBill, count *int64, money *dto.TotalMoneyBill) error {
 	var err error
 	var data models.XaBill
+	c.CreatedAtOrder = "desc"
 
 	if c.TripId != "" {
 		var tripInfo models.XaTrip

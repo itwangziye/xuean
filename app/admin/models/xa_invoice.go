@@ -14,6 +14,7 @@ type XaInvoice struct {
 	InvoiceStatus  string `json:"invoiceStatus" gorm:"type:tinyint(4);comment:状态"`
 	Counted        string `json:"counted" gorm:"type:varchar(50);comment:创建日期"`
 	TripId         string `json:"tripId" gorm:"-"`
+	InvoiceDate    string `json:"invoiceDate" gorm:"type:varchar(50);comment:开票日期"`
 	models.ModelTime
 	models.ControlBy
 }

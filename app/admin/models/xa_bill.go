@@ -18,6 +18,7 @@ type XaBill struct {
 	OperatorName string `json:"operatorName" gorm:"type:varchar(50);comment:经办人"`
 	Counted      string `json:"counted" gorm:"type:varchar(50);comment:创建日期"`
 	TripId       string `json:"tripId" gorm:"-"`
+	BillDate     string `json:"billDate" gorm:"type:varchar(50);comment:收款日期"`
 	models.ModelTime
 	models.ControlBy
 }

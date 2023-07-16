@@ -46,6 +46,7 @@ type XaBillInsertReq struct {
 	Remark       string   `json:"remark" comment:"备注"`
 	OperatorName string   `json:"operatorName" comment:"经办人"`
 	TripId       []string `json:"trip_id" comment:"行程编号"`
+	BillDate     string   `json:"billDate" comment:"收款日期"`
 	common.ControlBy
 }
 
@@ -72,6 +73,11 @@ func (s *XaBillInsertReq) Generate(model *models.XaBill) {
 	model.CreateBy = s.CreateBy // 添加这而，需要记录是被谁创建的
 	model.OperatorName = s.OperatorName
 	model.Counted = time.Now().Format("2006-01-02")
+	model.BillDate = s.BillDate
+
+	if s.BillDate == "" {
+		model.BillDate = time.Now().Format("2006-01-02")
+	}
 }
 
 func (s *XaBillInsertReq) GetId() interface{} {
@@ -88,6 +94,7 @@ type XaBillUpdateReq struct {
 	BillStatus   string `json:"billStatus" comment:"状态"`
 	Remark       string `json:"remark" comment:"备注"`
 	OperatorName string `json:"operatorName" comment:"经办人"`
+	BillDate     string `json:"billDate" comment:"收款日期"`
 	common.ControlBy
 }
 
@@ -112,6 +119,11 @@ func (s *XaBillUpdateReq) Generate(model *models.XaBill) {
 	model.UpdateBy = s.UpdateBy // 添加这而，需要记录是被谁更新的
 	model.OperatorName = s.OperatorName
 	model.Counted = time.Now().Format("2006-01-02")
+	model.BillDate = s.BillDate
+
+	if s.BillDate == "" {
+		model.BillDate = time.Now().Format("2006-01-02")
+	}
 }
 
 type XaBillUpdateStatusReq struct {

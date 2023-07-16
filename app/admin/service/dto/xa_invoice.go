@@ -34,6 +34,7 @@ type XaInvoiceInsertReq struct {
 	Remark         string   `json:"remark" comment:"发票备注"`
 	InvoiceStatus  string   `json:"invoiceStatus" comment:"状态"`
 	TripId         []string `json:"trip_id" comment:"行程编号"`
+	InvoiceDate    string   `json:"invoiceDate" comment:"开票日期"`
 	common.ControlBy
 }
 
@@ -49,6 +50,11 @@ func (s *XaInvoiceInsertReq) Generate(model *models.XaInvoice) {
 	model.InvoiceStatus = s.InvoiceStatus
 	model.CreateBy = s.CreateBy // 添加这而，需要记录是被谁创建的
 	model.Counted = time.Now().Format("2006-01-02")
+	model.InvoiceDate = s.InvoiceDate
+
+	if s.InvoiceDate == "" {
+		model.InvoiceDate = time.Now().Format("2006-01-02")
+	}
 }
 
 func (s *XaInvoiceInsertReq) GetId() interface{} {
@@ -62,6 +68,7 @@ type XaInvoiceUpdateReq struct {
 	Money          string `json:"money" comment:"发票金额"`
 	Remark         string `json:"remark" comment:"发票备注"`
 	InvoiceStatus  string `json:"invoiceStatus" comment:"状态"`
+	InvoiceDate    string `json:"invoiceDate" comment:"开票日期"`
 	common.ControlBy
 }
 
@@ -76,6 +83,11 @@ func (s *XaInvoiceUpdateReq) Generate(model *models.XaInvoice) {
 	model.InvoiceStatus = "1"
 	model.UpdateBy = s.UpdateBy // 添加这而，需要记录是被谁更新的
 	model.Counted = time.Now().Format("2006-01-02")
+	model.InvoiceDate = s.InvoiceDate
+
+	if s.InvoiceDate == "" {
+		model.InvoiceDate = time.Now().Format("2006-01-02")
+	}
 }
 
 func (s *XaInvoiceUpdateReq) GetId() interface{} {

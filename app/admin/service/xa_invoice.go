@@ -50,7 +50,7 @@ func (e *XaInvoice) GetPage(c *dto.XaInvoiceGetPageReq, p *actions.DataPermissio
 		tripIds := ""
 		if len(tripList) > 0 {
 			for _, v := range tripList {
-				tripIds = v.TripId + ","
+				tripIds = tripIds + v.TripId + ","
 			}
 		}
 
@@ -59,6 +59,12 @@ func (e *XaInvoice) GetPage(c *dto.XaInvoiceGetPageReq, p *actions.DataPermissio
 			tripIds = tripIds[0:length]
 		}
 		value.TripId = tripIds
+
+		invoiceDate := value.InvoiceDate
+
+		if len(invoiceDate) > 10 {
+			value.InvoiceDate = invoiceDate[0:10]
+		}
 
 		*list = append(*list, value)
 	}

@@ -3,13 +3,12 @@ package service
 import (
 	"errors"
 	"github.com/go-admin-team/go-admin-core/sdk/service"
-	"gorm.io/gorm"
-	"strconv"
-
 	"go-admin/app/admin/models"
 	"go-admin/app/admin/service/dto"
 	"go-admin/common/actions"
 	cDto "go-admin/common/dto"
+	"gorm.io/gorm"
+	"strconv"
 )
 
 type XaBill struct {
@@ -54,7 +53,7 @@ func (e *XaBill) GetPage(c *dto.XaBillGetPageReq, p *actions.DataPermission, lis
 		tripIds := ""
 		if len(tripList) > 0 {
 			for _, v := range tripList {
-				tripIds = v.TripId + ","
+				tripIds = tripIds + v.TripId + ","
 			}
 		}
 
@@ -63,6 +62,12 @@ func (e *XaBill) GetPage(c *dto.XaBillGetPageReq, p *actions.DataPermission, lis
 			tripIds = tripIds[0:length]
 		}
 		value.TripId = tripIds
+
+		billDate := value.BillDate
+
+		if len(billDate) >= 10 {
+			value.BillDate = billDate[0:10]
+		}
 
 		*list = append(*list, value)
 	}

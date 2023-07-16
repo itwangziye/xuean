@@ -55,6 +55,8 @@ type XaTripInsertReq struct {
 	InvoiceCompany string `json:"invoiceCompany" comment:"发票单位"`
 	Money          string `json:"money" comment:"发票金额"`
 	Remark         string `json:"remark" comment:"发票备注"`
+	TripMark       string `json:"tripMark" comment:"行程备注"`
+	TripDate       string `json:"tripDate" comment:"行程日期"`
 
 	common.ControlBy
 }
@@ -73,6 +75,7 @@ func (s *XaTripInsertReq) Generate(model *models.XaTrip) {
 	model.OperatorName = s.OperatorName
 	model.PreMoney = s.PreMoney
 	model.IsSettle = s.IsSettle
+
 	model.PayMoney = "0"
 
 	if s.IsSettle == "2" {
@@ -89,6 +92,12 @@ func (s *XaTripInsertReq) Generate(model *models.XaTrip) {
 	//model.BillId = s.BillId
 	model.CreateBy = s.CreateBy // 添加这而，需要记录是被谁创建的
 	model.Counted = time.Now().Format("2006-01-02")
+	model.TripMark = s.TripMark
+	model.TripDate = s.TripDate
+
+	if s.TripDate == "" {
+		model.TripDate = time.Now().Format("2006-01-02")
+	}
 }
 
 func (s *XaTripInsertReq) GetId() interface{} {
@@ -110,6 +119,8 @@ type XaTripUpdateReq struct {
 	//TripStatus   string `json:"tripStatus" comment:"状态"`
 	InvoiceId string `json:"invoiceId" comment:"发票编号"`
 	//BillId       string `json:"billId" comment:"流水编号"`
+	TripMark string `json:"tripMark" comment:"行程备注"`
+	TripDate string `json:"tripDate" comment:"行程日期"`
 	common.ControlBy
 }
 
@@ -139,6 +150,12 @@ func (s *XaTripUpdateReq) Generate(model *models.XaTrip) {
 	//model.BillId = s.BillId
 	model.UpdateBy = s.UpdateBy // 添加这而，需要记录是被谁更新的
 	model.Counted = time.Now().Format("2006-01-02")
+	model.TripMark = s.TripMark
+	model.TripDate = s.TripDate
+
+	if s.TripDate == "" {
+		model.TripDate = time.Now().Format("2006-01-02")
+	}
 }
 
 type XaTipUpdateStatusReq struct {

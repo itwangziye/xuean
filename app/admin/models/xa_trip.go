@@ -22,6 +22,8 @@ type XaTrip struct {
 	InvoiceId    string `json:"invoiceId" gorm:"type:varchar(50);comment:发票编号"`
 	BillId       string `json:"billId" gorm:"type:varchar(50);comment:流水编号"`
 	Counted      string `json:"counted" gorm:"type:varchar(50);comment:创建时间"`
+	TripDate     string `json:"tripDate" gorm:"type:varchar(50);comment:行程日期"`
+	TripMark     string `json:"tripMark" gorm:"type:varchar(50);comment:行程备注"`
 
 	models.ModelTime
 	models.ControlBy

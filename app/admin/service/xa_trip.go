@@ -20,6 +20,7 @@ func (e *XaTrip) GetPage(c *dto.XaTripGetPageReq, p *actions.DataPermission, lis
 	var err error
 	var data models.XaTrip
 	c.CreatedAtOrder = "desc"
+	var listTemp = make([]models.XaTrip, 0)
 
 	err = e.Orm.Model(&data).
 		Scopes(
@@ -27,11 +28,20 @@ func (e *XaTrip) GetPage(c *dto.XaTripGetPageReq, p *actions.DataPermission, lis
 			cDto.Paginate(c.GetPageSize(), c.GetPageIndex()),
 			actions.Permission(data.TableName(), p),
 		).
-		Find(list).Limit(-1).Offset(-1).
+		Find(&listTemp).Limit(-1).Offset(-1).
 		Count(count).Error
 	if err != nil {
 		e.Log.Errorf("XaTripService GetPage error:%s \r\n", err)
 		return err
+	}
+
+	for _, value := range listTemp {
+		tripDate := value.TripDate
+
+		if len(tripDate) >= 10 {
+			value.TripDate = tripDate[0:10]
+		}
+		*list = append(*list, value)
 	}
 
 	e.Orm.Table("xa_trip").Scopes(
@@ -68,6 +78,10 @@ func (e *XaTrip) Insert(c *dto.XaTripInsertReq) error {
 	var err error
 	var data models.XaTrip
 	c.Generate(&data)
+
+	if len(c.TripMark) > 500 {
+		return errors.New("行程备注不能超过500字")
+	}
 
 	err = e.Orm.Create(&data).Error
 	if err != nil {
@@ -125,6 +139,11 @@ func (e *XaTrip) Insert(c *dto.XaTripInsertReq) error {
 func (e *XaTrip) Update(c *dto.XaTripUpdateReq, p *actions.DataPermission) error {
 	var err error
 	var data = models.XaTrip{}
+
+	if len(c.TripMark) > 500 {
+		return errors.New("行程备注不能超过500字")
+	}
+
 	e.Orm.Scopes(
 		actions.Permission(data.TableName(), p),
 	).First(&data, c.GetId())

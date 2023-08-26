@@ -47,6 +47,7 @@ type XaTripInsertReq struct {
 	OperatorName string `json:"operatorName" comment:"经办人" vd:"len($)>0"`
 	PreMoney     string `json:"preMoney" comment:"应付金额" vd:"len($)>0"`
 	PayMoney     string `json:"payMoney" comment:"实付金额"`
+	BillObj      string `json:"billObj" gorm:"type:varchar(50);comment:交易对象"`
 	IsSettle     string `json:"isSettle" comment:"是否结算，1是，2否" vd:"len($)>0"`
 	IsInvoicing  string `json:"isInvoicing" comment:"是否开票，1是，2否" vd:"len($)>0"`
 	//TripStatus   string `json:"tripStatus" comment:"状态"`

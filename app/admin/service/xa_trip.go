@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+
 	"github.com/go-admin-team/go-admin-core/sdk/service"
 	"gorm.io/gorm"
 
@@ -94,7 +95,7 @@ func (e *XaTrip) Insert(c *dto.XaTripInsertReq) error {
 		var xaBillData models.XaBill
 		xaBillData.BillId = "LSGL" + cDto.RandStr(10)
 		xaBillData.BillType = "1"
-		xaBillData.BillObj = c.InvoiceCompany
+		xaBillData.BillObj = c.BillObj
 		xaBillData.Income = c.PayMoney
 		xaBillData.PayOut = "0"
 		xaBillData.BillStatus = "1"
@@ -106,6 +107,16 @@ func (e *XaTrip) Insert(c *dto.XaTripInsertReq) error {
 		if err3 != nil {
 			e.Log.Errorf("XaTripService Insert error:%s \r\n", err3)
 			return err3
+		}
+
+		data.BillId = xaBillData.BillId
+		db := e.Orm.Save(&data)
+		if err = db.Error; err != nil {
+			e.Log.Errorf("XaTripService Save error:%s \r\n", err)
+			return err
+		}
+		if db.RowsAffected == 0 {
+			return errors.New("无权更新该数据")
 		}
 	}
 
@@ -130,6 +141,16 @@ func (e *XaTrip) Insert(c *dto.XaTripInsertReq) error {
 		if err2 != nil {
 			e.Log.Errorf("XaTripService Insert error:%s \r\n", err2)
 			return err2
+		}
+
+		data.InvoiceId = xaInvoiceData.InvoiceId
+		db := e.Orm.Save(&data)
+		if err = db.Error; err != nil {
+			e.Log.Errorf("XaTripService Save error:%s \r\n", err)
+			return err
+		}
+		if db.RowsAffected == 0 {
+			return errors.New("无权更新该数据")
 		}
 	}
 	return nil
